@@ -1,0 +1,10 @@
+<aura:documentation>
+	<aura:description>
+        <p>
+            This component is a library that contains usefuls functions that are described in Specification tab.
+        </p>
+        <p>
+            The functions are made to retrive picklists in Lightning Aura components.
+        </p>
+    </aura:description>
+</aura:documentation>

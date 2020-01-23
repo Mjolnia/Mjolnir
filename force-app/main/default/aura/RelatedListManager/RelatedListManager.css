@@ -1,0 +1,11 @@
+.THIS .label-hidden > label {
+    display: none;
+}
+
+.THIS .slds-spinner_container {
+    background-color: rgba(169, 169, 169, 0.50); /* darkgray with opacity at 0.5 */ 
+}
+
+.THIS .actionSection {
+    text-align: right;
+}

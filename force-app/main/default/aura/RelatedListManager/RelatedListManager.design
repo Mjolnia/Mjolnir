@@ -1,0 +1,27 @@
+<design:component>
+    <design:attribute 
+        name="childSObjectAPIName" 
+        label="API Name of the child object" 
+    />
+    <design:attribute 
+        name="relationshipFieldName" 
+        label="API Name of the relationship field on the child object" 
+    />
+    <design:attribute 
+        name="relationshipFieldChildLabel" 
+        label="Name of the elements shown" 
+    />
+    <design:attribute 
+        name="listOfSObjectFieldsString" 
+        label="List of fields to show in table separated by comma" 
+    />
+    <design:attribute 
+        name="picklistNoneLabel" 
+        label="Label for the 'None' element" 
+    />
+    <design:attribute 
+        name="iconName" 
+        label="Name of the icon" 
+        description="Name of the icon formatted like category:iconname from SLDS (Search SLDS Icon on Google)"
+    />
+</design:component>

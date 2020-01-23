@@ -1,0 +1,25 @@
+<aura:component 
+    controller="PicklistHelper"
+    access="public"
+>
+    <c:AuraHelper aura:id="libAuraHelper" />
+    
+	<aura:method name="onFailureDefault" action="{!c.onFailureDefaultJS}" access="public">
+        <aura:attribute name="response" type="Object" required="true" description="The response of the asynchronous call." />
+    </aura:method>
+    
+	<aura:method name="getPicklistValues" action="{!c.getPicklistValuesAuraJS}" access="public">
+        <aura:attribute name="sObjectName" type="String" required="true" description="The sObject API Name where is the picklist field." />
+        <aura:attribute name="fieldName" type="String" required="true" description="The API name of the picklist field." />
+    </aura:method>
+    
+	<aura:method name="getPicklistLabelByValueMap" action="{!c.getPicklistLabelByValueMapAuraJS}" access="public">
+        <aura:attribute name="sObjectName" type="String" required="true" description="The sObject API Name where is the picklist field." />
+        <aura:attribute name="fieldName" type="String" required="true" description="The API name of the picklist field." />
+    </aura:method>
+    
+	<aura:method name="getDependentPicklistValues" action="{!c.getDependentPicklistValuesAuraJS}" access="public">
+        <aura:attribute name="sObjectName" type="String" required="true" description="The sObject API Name where is the picklist field." />
+        <aura:attribute name="dependantFieldName" type="String" required="true" description="The API name of the picklist field that has a dependency." />
+    </aura:method>
+</aura:component>
