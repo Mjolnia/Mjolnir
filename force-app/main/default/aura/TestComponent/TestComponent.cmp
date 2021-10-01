@@ -1,7 +1,0 @@
-<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
-    <c:AuraHandler aura:id="libAuraHelper" />
-    <c:PicklistHelperAura aura:id="libPicklistHelperAura" />
-    <c:DatabaseRequester aura:id="libDatabaseRequester" />
-    
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-</aura:component>
