@@ -32,3 +32,6 @@ Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
+
+# Personal files to don't include
+flexipages/
