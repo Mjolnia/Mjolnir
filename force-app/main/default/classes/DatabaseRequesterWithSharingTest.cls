@@ -57,6 +57,28 @@ private class DatabaseRequesterWithSharingTest {
             
         Test.stopTest();
     }
+
+    @isTest
+    private static void itShouldAuraSOQL() {
+        Test.startTest();
+        
+        DatabaseRequesterWithSharing.getSelectFieldsFromSObjectAura(
+            new List<String>{'Id'}, 
+            'Account', 
+            'everything', 
+            'Name != \'NULL\'', 
+            'SECURITY_ENFORCED', 
+            null, 
+            null, 
+            'Name ASC', 
+            '1', 
+            '0', 
+            'VIEW', 
+            null
+        );
+            
+        Test.stopTest();
+    }
     
     @isTest
     private static void itShouldSOSL() {
@@ -77,6 +99,22 @@ private class DatabaseRequesterWithSharingTest {
             'Account(Id, Name), Contact(Id, LastName, FirstName)', 
             new List<String>{'HIGHLIGHT', 'METADATA = \'LABELS\'', 'SNIPPET', 'SPELL_CORRECTION = FALSE'}, 
             '5'
+        );
+            
+        Test.stopTest();
+    }
+    
+    @isTest
+    private static void itShouldAuraSOSL() {
+        Test.startTest();
+        
+        DatabaseRequesterWithSharing.searchInSObjectsAura(
+            'TEST', 
+            'ALL FIELDS', 
+            'Account(Id, Name), Contact(Id, LastName, FirstName)', 
+            new List<String>{'HIGHLIGHT', 'METADATA = \'LABELS\'', 'SNIPPET', 'SPELL_CORRECTION = FALSE'}, 
+            '5', 
+            null
         );
             
         Test.stopTest();

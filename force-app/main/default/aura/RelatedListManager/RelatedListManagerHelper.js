@@ -1,10 +1,10 @@
 ({
 	onSuccessGetFieldMetadata: function(result) {
         let component = result.component;
-        let response = result.response;
         
         component.set('v.reachedAsyncAtInit', component.get('v.reachedAsyncAtInit') + 1);
-        let listOfSObjectFieldMetadata = response.getReturnValue();
+        let listOfSObjectFieldMetadata = result.returnValue;
+        console.log(JSON.stringify(listOfSObjectFieldMetadata));
         let timeFieldsToConvert = [];
         for(let i in listOfSObjectFieldMetadata) {
             let fieldMetadata = listOfSObjectFieldMetadata[i];
@@ -50,44 +50,71 @@
         
         component.set('v.listOfSObjectFieldMetadata', listOfSObjectFieldMetadata);
         component.set('v.timeFieldsToConvert', timeFieldsToConvert);
+
+        let listOfSObjectFieldNamesToQuery = component.get('v.listOfSObjectFieldNames').slice(0);
+        listOfSObjectFieldNamesToQuery.push(component.get('v.relationshipFieldName'));
+        component.set('v.listOfSObjectFieldNamesToQuery', listOfSObjectFieldNamesToQuery);
         
-        return component.find('libAuraHelper').callApexControllerFunction(
+        return component.find('libDatabaseRequester').getSelectFieldsFromSObject(
             component, 
-            'getRowsApex', 
-            {
-                recordId: component.get('v.recordId'), 
-                sObjectName: component.get('v.childSObjectAPIName'), 
-                relationshipField: component.get('v.relationshipFieldName'), 
-                listOfFields: component.get('v.listOfSObjectFieldNames')
-            }
+            listOfSObjectFieldNamesToQuery, 
+            component.get('v.childSObjectAPIName'), 
+            null, 
+            component.get('v.relationshipFieldName') + ' = \'' + component.get('v.recordId') + '\''
         );
     }, 
-	onSuccessSaveRows: function(result) {
+	onSuccessInsertRows: function(result) {
+        let error = result.validationRulesError;
         let component = result.component;
-        let response = result.response;
+
+        if(error) {
+            throw new Error(error);
+        }
         
         component.set('v.reachedAsyncAtInit', component.get('v.reachedAsyncAtInit') + 1);
-        
-        return component.find('libAuraHelper').callApexControllerFunction(
+        return component.find('libDatabaseDML').updateSObjects(
             component, 
-            'getRowsApex', 
-            {
-                recordId: component.get('v.recordId'), 
-                sObjectName: component.get('v.childSObjectAPIName'), 
-                relationshipField: component.get('v.relationshipFieldName'), 
-                listOfFields: component.get('v.listOfSObjectFieldNames')
-            }
+            component.get('v.tempRowsToUpdate')
+        );
+    }, 
+	onSuccessUpdateRows: function(result) {
+        let error = result.validationRulesError;
+        let component = result.component;
+
+        if(error) {
+            throw new Error(error);
+        }
+        
+        component.set('v.reachedAsyncAtInit', component.get('v.reachedAsyncAtInit') + 1);
+        return component.find('libDatabaseDML').deleteSObjects(
+            component, 
+            component.get('v.tempRowsToDelete')
+        );
+    }, 
+	onSuccessDeleteRows: function(result) {
+        let error = result.validationRulesError;
+        let component = result.component;
+
+        if(error) {
+            throw new Error(error);
+        }
+
+        $A.get('e.force:refreshView').fire();
+        
+        component.set('v.reachedAsyncAtInit', component.get('v.reachedAsyncAtInit') + 1);
+        return component.find('libDatabaseRequester').getSelectFieldsFromSObject(
+            component, 
+            component.get('v.listOfSObjectFieldNamesToQuery'), 
+            component.get('v.childSObjectAPIName'), 
+            null, 
+            component.get('v.relationshipFieldName') + ' = \'' + component.get('v.recordId') + '\''
         );
     }, 
     onSuccessGetRows: function(result) {
         let component = result.component;
-        let response = result.response;
         
-    	component.set('v.reachedAsyncAtInit', component.get('v.reachedAsyncAtInit') + 1);
-    	component.set('v.rows', response.getReturnValue());
-        
-        let rows = component.get('v.rows');
-        
+        component.set('v.reachedAsyncAtInit', component.get('v.reachedAsyncAtInit') + 1);
+        let rows = result.returnValue;
         let rowsMapById = {};
         let rowIndexMapById = {};
         if(rows && Array.isArray(rows)) {
@@ -98,6 +125,8 @@
                 rowIndexMapById[row.Id] = i;
             }
         }
+
+    	component.set('v.rows', rows);
         component.set('v.rowsMapById', rowsMapById);
         component.set('v.rowIndexMapById', rowIndexMapById);
 	}, 

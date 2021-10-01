@@ -1,0 +1,29 @@
+<aura:component
+    controller="DatabaseRequesterWithSharing" 
+    access="global"
+>
+    <aura:method name="getSelectFieldsFromSObject" action="{!c.getSelectFieldsFromSObjectJS}" access="global">
+        <aura:attribute name="callerComponent" type="Object" required="true" description="The component who do the query." />
+        <aura:attribute name="fieldNameSet" type="List" required="true" description="The set of SOQL fields you want to retrieve." />
+        <aura:attribute name="sObjectName" type="String" required="true" description="The API name of the sObject you want to query." />
+        <aura:attribute name="usingScopeClause" type="String" description="The USING SCOPE clause." />
+        <aura:attribute name="whereClause" type="String" description="The WHERE clause." />
+        <aura:attribute name="withClause" type="String" description="The WITH clause." />
+        <aura:attribute name="groupByClause" type="String" description="The GROUP BY clause." />
+        <aura:attribute name="havingClause" type="String" description="The HAVING clause." />
+        <aura:attribute name="orderByClause" type="String" description="The ORDER BY clause." />
+        <aura:attribute name="limitClause" type="String" description="The LIMIT clause." />
+        <aura:attribute name="offsetClause" type="String" description="The OFFSET clause." />
+        <aura:attribute name="forClause" type="String" description="The FOR clause." />
+        <aura:attribute name="updateClause" type="String" description="The UPDATE clause." />
+    </aura:method>
+    <aura:method name="searchInSObjects" action="{!c.searchInSObjectsJS}" access="global">
+        <aura:attribute name="callerComponent" type="Object" required="true" description="The component who do the query." />
+        <aura:attribute name="searchString" type="String" required="true" description="The words that are searched in existing data." />
+        <aura:attribute name="inClause" type="String" description="The IN clause." />
+        <aura:attribute name="returningClause" type="String" description="The RETURNING clause." />
+        <aura:attribute name="withClauses" type="List" description="The WITH clauses." />
+        <aura:attribute name="limitClause" type="String" description="The LIMIT clause." />
+        <aura:attribute name="updateClause" type="String" description="The UPDATE clause." />
+    </aura:method>
+</aura:component>

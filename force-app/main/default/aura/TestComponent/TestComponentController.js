@@ -2,41 +2,66 @@
 	doInit: function(component, event, helper) {
 		let libAuraHelper = component.find('libAuraHelper');
 		let libPicklistHelper = component.find('libPicklistHelperAura');
+		let libDatabaseRequester = component.find('libDatabaseRequester');
         
         libPicklistHelper.getPicklistValues(
             'Account', 
-            'Controlling_field__c'
+            'mjlnr__Active__c'
         ).then(
-            function(response) {
-                console.log(JSON.stringify(response.getReturnValue()));
+            function(result) {
+                let component = result.component;
+                let returnValue = result.returnValue;
+
+                console.log(JSON.stringify(returnValue));
                 return libPicklistHelper.getPicklistLabelByValueMap(
             		'Account', 
-            		'Dependant_field__c'
-        		)
-    		}, 
-            libAuraHelper.onFailureDefault
+            		'mjlnr__Active__c'
+        		);
+            }
         ).then(
-            function(response) {
-                console.log(JSON.stringify(response.getReturnValue()));
+            function(result) {
+                let component = result.component;
+                let returnValue = result.returnValue;
+
+                console.log(JSON.stringify(returnValue));
                 return libPicklistHelper.getDependentPicklistValues(
             		'Account', 
-            		'Dependant_field__c'
-        		)
-            }, 
-            libAuraHelper.onFailureDefault
+            		'Industry'
+        		);
+            }
         ).then(
-            function(response) {
-                console.log(JSON.stringify(response.getReturnValue()));
+            function(result) {
+                let component = result.component;
+                let returnValue = result.returnValue;
+                
+                console.log(JSON.stringify(returnValue));
                 return libAuraHelper.getTranslations(
-            		['Account','Contact']
-        		)
-            }, 
-            libAuraHelper.onFailureDefault
+            		['Account', 'Contact']
+        		);
+            }
         ).then(
-            function(response) {
-                console.log(JSON.stringify(response.getReturnValue()));
-            }, 
-            libAuraHelper.onFailureDefault
+            function(result) {
+                let component = result.component;
+                let returnValue = result.returnValue;
+                
+                console.log(JSON.stringify(returnValue));
+                return libDatabaseRequester.getSelectFieldsFromSObject(
+                    component, 
+                    ['Id', 'Name'], 
+                    'Account'
+        		);
+            }
+        ).then(
+            function(result) {
+                let component = result.component;
+                let returnValue = result.returnValue;
+
+                console.log(JSON.stringify(returnValue));
+            }
+        ).catch(
+            function(error) {
+                console.error(error.message);
+            }
         );
 	}
 })

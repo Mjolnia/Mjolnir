@@ -1,12 +1,13 @@
 public with sharing class RelatedListManagerController {
-    class FieldMetadata {
+    public class FieldMetadata {
         @auraEnabled public String name;
         @auraEnabled public String label;
         @auraEnabled public String childRelationshipLabel;
         @auraEnabled public String dataType;
         @auraEnabled public Boolean isRequired;
+        @auraEnabled public Boolean isEditable;
         @auraEnabled public String increment;
-        @auraEnabled public Map<String,String> picklistLabelsByValuesMap;
+        @auraEnabled public List<Map<String,String>> options;
         
         public FieldMetadata(
             String name, 
@@ -14,84 +15,89 @@ public with sharing class RelatedListManagerController {
             String childRelationshipLabel, 
             String dataType, 
             Boolean isRequired, 
+            Boolean isEditable, 
             Integer scale, 
-            Map<String,String> picklistLabelsByValuesMap
+            List<Map<String,String>> options
         ) {
             this.name = name;
             this.label = label;
             this.childRelationshipLabel = childRelationshipLabel;
             this.dataType = dataType;
             this.isRequired = isRequired;
+            this.isEditable = isEditable;
             if(scale != null) {
                 this.increment = '0.' + ''.leftPad(scale - 1, '0') + '1';
             }
             
-            this.picklistLabelsByValuesMap = picklistLabelsByValuesMap;
+            this.options = options;
         }
     }
     
-    @auraEnabled
-    public static List<FieldMetadata> getFieldMetadataApex(String sObjectName, List<String> listOfFields) {
+    @auraEnabled(cacheable=true)
+    public static List<Object> getFieldMetadataApex(String sObjectName, List<String> listOfFields, String emptyPicklistLabel) {
         try {
             List<FieldMetadata> fieldMetadataList = new List<FieldMetadata>();
+
+            Map<String,Schema.SObjectType> globalDescribe = Schema.getGlobalDescribe();
             
-            Map<String,Schema.SObjectField> sObjectFieldsMap = Schema.getGlobalDescribe()
-            .get(sObjectName)
-            .getDescribe()
-            .fields
-            .getMap();
+            Schema.DescribeSObjectResult sObjectDescribe = globalDescribe.get(sObjectName).getDescribe();
+            Map<String,Schema.SObjectField> sObjectFieldsMap = sObjectDescribe.fields.getMap();
             
             for(String fieldAPIName: listOfFields) {
                 if(sObjectFieldsMap.containsKey(fieldAPIName)) {
                     Schema.DescribeFieldResult describeSObjectField = sObjectFieldsMap.get(fieldAPIName).getDescribe();
-                    Schema.DisplayType dataType = describeSObjectField.getType();
-                    Map<String,String> picklistElements;
                     
-                    if(dataType == Schema.DisplayType.Picklist || dataType == Schema.DisplayType.MultiPicklist) {
-                        picklistElements = PicklistHelper.getPicklistLabelByValueMap(sObjectName, fieldAPIName);
-                    } else if(dataType == Schema.DisplayType.Reference) {
-                        if(!describeSObjectField.isNamePointing()) {
-                            picklistElements = new Map<String,String>();
-                            List<sObject> parentSObjectRows = DatabaseRequesterWithSharing.getSelectFieldsFromSObjectFor(
-                                new Set<String>{'Id', 'Name'}, 
-                                describeSObjectField.getReferenceTo()[0].getDescribe().getLocalName(), 
-                                null, 
-                                null, 
-                                null, 
-                                null, 
-                                null, 
-                                null, 
-                                null
-                            );
-                            for(sObject row: 
-                                DatabaseRequesterWithSharing.getSelectFieldsFromSObjectFor(
-                                    new Set<String>{'Id', 'Name'}, 
-                                    describeSObjectField.getReferenceTo()[0].getDescribe().getLocalName(), 
-                                    null, 
-                                    null, 
-                                    null, 
-                                    null, 
-                                    null, 
-                                    null, 
-                                    null
-                                )
-                            ) {
-                                picklistElements.put((String) row.get('Id'), (String) row.get('Name'));
+                    if(describeSObjectField.isAccessible()) {
+                        Schema.DisplayType dataType = describeSObjectField.getType();
+                        List<Map<String,String>> options;
+                        Boolean isRequired = !describeSObjectField.isNillable();
+    
+                        if(dataType == Schema.DisplayType.Picklist || dataType == Schema.DisplayType.MultiPicklist) {
+                            options = new List<Map<String,String>>();
+                            if(!isRequired) {
+                                options.add(new Map<String,String>{'' => emptyPicklistLabel});
+                            }
+                            for(Schema.PicklistEntry row: describeSObjectField.getPickListValues()) {
+                                if(row.isActive()) {
+                                    options.add(new Map<String,String>{'value' => row.getValue(), 'label' => row.getLabel()});
+                                }
+                            }
+                        } else if(dataType == Schema.DisplayType.Reference) {
+                            if(!describeSObjectField.isNamePointing()) {
+                                options = new List<Map<String,String>>();
+                                if(!isRequired) {
+                                    options.add(new Map<String,String>{'' => emptyPicklistLabel});
+                                }
+                                for(sObject row: 
+                                    Database.query(
+                                        RequestBuilder.getSOQLQuerySimple(
+                                            new List<String>{'Id', 'Name'}, 
+                                            describeSObjectField.getReferenceTo()[0].getDescribe().getLocalName(), 
+                                            null, 
+                                            null, 
+                                            '100', 
+                                            null
+                                        )
+                                    )
+                                ) {
+                                    options.add(new Map<String,String>{'value' => (String) row.get('Id'), 'label' => (String) row.get('Name')});
+                                }
                             }
                         }
+                        
+                        fieldMetadataList.add(
+                            new FieldMetadata(
+                                describeSObjectField.getLocalName(), 
+                                describeSObjectField.getLabel(), 
+                                (dataType == Schema.DisplayType.Reference) ? describeSObjectField.getRelationshipName() : null, 
+                                dataType.name(), 
+                                isRequired, 
+                                describeSObjectField.isCreateable() && describeSObjectField.isUpdateable(),
+                                describeSObjectField.getScale(), 
+                                options
+                            )
+                        );
                     }
-                    
-                    fieldMetadataList.add(
-                        new FieldMetadata(
-                            describeSObjectField.getLocalName(), 
-                            describeSObjectField.getLabel(), 
-                            (dataType == Schema.DisplayType.Reference) ? describeSObjectField.getRelationshipName() : null, 
-                            dataType.name(), 
-                            !describeSObjectField.isNillable(), 
-                            describeSObjectField.getScale(), 
-                            picklistElements
-                        )
-                    );
                 }
             }
             
@@ -101,25 +107,23 @@ public with sharing class RelatedListManagerController {
             throw new AuraHandledException(error.getMessage());
         }
     }
-    
+
     @auraEnabled
-    public static List<sObject> getRowsApex(Id recordId, String sObjectName, String relationshipField, List<String> listOfFields) {
+    public static List<sObject> getDataApex(List<String> fieldAPINames, String sObjectName, String whereClause) {
         try {
-            Set<String> fieldToQuery = new Set<String>(listOfFields);
-            fieldToQuery.add(relationshipField);
-            return DatabaseRequesterWithSharing.getSelectFieldsFromSObjectFor(
-                fieldToQuery, 
-                sObjectName, 
-                null, 
-                relationshipField + ' = \'' + recordId + '\'', 
-                null, 
-                null, 
-                null, 
-                null, 
-                null
+            return Database.query(
+                RequestBuilder.getSOQLQuerySimple(
+                    fieldAPINames, 
+                    sObjectName, 
+                    whereClause, 
+                    null, 
+                    null, 
+                    null
+                )
             );
         } catch(Exception error) {
             System.debug(error.getStackTraceString());
+            System.debug(error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }
@@ -138,9 +142,11 @@ public with sharing class RelatedListManagerController {
             return null;
         } catch(DmlException error) {
             System.debug(error.getStackTraceString());
+            System.debug(error.getDmlMessage(0));
             return error.getDmlMessage(0);
         } catch(Exception error) {
             System.debug(error.getStackTraceString());
+            System.debug(error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }

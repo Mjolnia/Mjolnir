@@ -1,0 +1,19 @@
+<aura:component
+    controller="DatabaseDMLController" 
+    access="global" 
+>
+    <aura:method name="insertSObjects" action="{!c.insertSObjectsJS}" access="global">
+        <aura:attribute name="callerComponent" type="Aura.Component" required="true" description="The component who do the query." access="global" />
+        <aura:attribute name="rowsToInsert" type="List" required="true" description="The JSON string of the list of sObjects to insert." />
+    </aura:method>
+
+    <aura:method name="updateSObjects" action="{!c.updateSObjectsJS}" access="global">
+        <aura:attribute name="callerComponent" type="Aura.Component" required="true" description="The component who do the query." access="global" />
+        <aura:attribute name="rowsToUpdate" type="List" required="true" description="The JSON string of the list of sObjects to update." />
+    </aura:method>
+
+    <aura:method name="deleteSObjects" action="{!c.deleteSObjectsJS}" access="global">
+        <aura:attribute name="callerComponent" type="Aura.Component" required="true" description="The component who do the query." access="global" />
+        <aura:attribute name="rowsToDelete" type="List" required="true" description="The JSON string of the list of sObjects to delete." />
+    </aura:method>
+</aura:component>

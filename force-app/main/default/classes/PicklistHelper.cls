@@ -3,7 +3,7 @@
  * @author Davy LAURENT
  * @version 2.0
  */
-public class PicklistHelper {
+global class PicklistHelper {
     private static final String BASE_64_MAP = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
     
     /**
@@ -13,7 +13,7 @@ public class PicklistHelper {
      * @param final String fieldName                The API Name of the field
      * @return List<String>                         The builted List
      */
-    public static List<String> getPicklistValues(final String sObjectName, final String fieldName) {
+    global static List<String> getPicklistValues(final String sObjectName, final String fieldName) {
         List<String> generatedList = new List<String>();
         for(Schema.PicklistEntry row: Schema.getGlobalDescribe()
             .get(sObjectName)
@@ -32,11 +32,12 @@ public class PicklistHelper {
     }
     
     @auraEnabled
-    public static List<String> getPicklistValuesAura(final String sObjectName, final String fieldName) {
+    global static List<String> getPicklistValuesAura(final String sObjectName, final String fieldName) {
         try {
             return getPicklistValues(sObjectName, fieldName);
         } catch(Exception error) {
-            System.debug(error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }
@@ -48,7 +49,7 @@ public class PicklistHelper {
      * @param final String fieldName                The API Name of the field
      * @return Set<String>                          The builted Set
      */
-    public static Set<String> getPicklistValuesSet(final String sObjectName, final String fieldName) {
+    global static Set<String> getPicklistValuesSet(final String sObjectName, final String fieldName) {
         Set<String> generatedSet = new Set<String>();
         for(Schema.PicklistEntry row: Schema.getGlobalDescribe()
             .get(sObjectName)
@@ -73,7 +74,7 @@ public class PicklistHelper {
      * @param final String fieldName                The API Name of the field
      * @return Map<String,String>                   The builted map
      */
-    public static Map<String, String> getPicklistLabelByValueMap(
+    global static Map<String, String> getPicklistLabelByValueMap(
         final String sObjectName,
         final String fieldName
     ) {
@@ -95,11 +96,12 @@ public class PicklistHelper {
     }
     
     @auraEnabled
-    public static Map<String, String> getPicklistLabelByValueMapAura(final String sObjectName, final String fieldName) {
+    global static Map<String, String> getPicklistLabelByValueMapAura(final String sObjectName, final String fieldName) {
         try {
             return getPicklistLabelByValueMap(sObjectName, fieldName);
         } catch(Exception error) {
-            System.debug(error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }
@@ -111,7 +113,7 @@ public class PicklistHelper {
      * @param String sObjectName 							The picklist field name.
      * @return Map<String, Map<String, String>>				The built dependency.
      */
-    public static Map<String, Map<String, String>> getDependentPicklistValues(final String sObjectName, final String dependantFieldName) {
+    global static Map<String, Map<String, String>> getDependentPicklistValues(final String sObjectName, final String dependantFieldName) {
         Schema.SObjectType sObjectType = Schema.getGlobalDescribe().get(sObjectName);
         if(sObjectType == null) {
             return new Map<String, Map<String, String>>();
@@ -124,11 +126,12 @@ public class PicklistHelper {
     }
     
     @auraEnabled
-    public static Map<String, Map<String, String>> getDependentPicklistValuesAura(final String sObjectName, final String dependantFieldName) {
+    global static Map<String, Map<String, String>> getDependentPicklistValuesAura(final String sObjectName, final String dependantFieldName) {
         try {
             return getDependentPicklistValues(sObjectName, dependantFieldName);
         } catch(Exception error) {
-            System.debug(error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }
@@ -140,7 +143,7 @@ public class PicklistHelper {
      * @param Schema.SObjectField dependantFieldSchema 		The picklist field.
      * @return Map<String, Map<String, String>>				The built dependency.
      */
-    public static Map<String, Map<String,String>> getDependentPicklistValues(Schema.SObjectField dependantFieldSchema) {
+    global static Map<String, Map<String,String>> getDependentPicklistValues(Schema.SObjectField dependantFieldSchema) {
         Map<String, Map<String,String>> dependentPicklistValues = new Map<String, Map<String,String>>();
         
         Schema.DescribeFieldResult dependantField = dependantFieldSchema.getDescribe();

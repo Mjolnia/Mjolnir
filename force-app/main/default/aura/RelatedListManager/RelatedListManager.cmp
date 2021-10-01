@@ -1,42 +1,45 @@
 <aura:component 
     controller="RelatedListManagerController"
     implements="force:hasRecordId,flexipage:availableForRecordHome" 
-    access="global" 
+    access="public" 
 >
-    <c:AuraHelper aura:id="libAuraHelper" />
+    <c:AuraHandler aura:id="libAuraHandler" />
     <c:PicklistHelperAura aura:id="libPicklistHelperAura" />
+    <c:DatabaseRequester aura:id="libDatabaseRequester" />
+    <c:DatabaseDML aura:id="libDatabaseDML" />
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     
-    <aura:attribute name="childSObjectAPIName" required="true" type="String" access="global" />
-    <aura:attribute name="relationshipFieldName" required="true" type="String" access="global" />
-    <aura:attribute name="relationshipFieldChildLabel" required="true" type="String" access="global" />
-    <aura:attribute name="listOfSObjectFieldsString" required="true" type="String" access="global" />
-    <aura:attribute name="picklistNoneLabel" required="true" type="String" access="global" />
-    <aura:attribute name="iconName" type="String" access="global" />
+    <aura:attribute name="childSObjectAPIName" required="true" type="String" access="public" />
+    <aura:attribute name="relationshipFieldName" required="true" type="String" access="public" />
+    <aura:attribute name="relationshipFieldChildLabel" required="true" type="String" access="public" />
+    <aura:attribute name="listOfSObjectFieldsString" required="true" type="String" access="public" />
+    <aura:attribute name="picklistNoneLabel" required="true" type="String" access="public" />
+    <aura:attribute name="iconName" type="String" access="public" />
     
     
-    <aura:attribute name="awaitedAsyncAtInit" type="Integer" default="2" access="public" />
+    <aura:attribute name="awaitedAsyncAtInit" type="Integer" default="2" access="public" /> 
     <aura:attribute name="reachedAsyncAtInit" type="Integer" default="0" access="public" />
     
     
     <aura:attribute name="listOfSObjectFieldNames" type="List" access="public" />
+    <aura:attribute name="listOfSObjectFieldNamesToQuery" type="List" access="public" />
     <aura:attribute name="listOfSObjectFieldMetadata" type="List" access="public" />
     <aura:attribute name="rows" type="List" access="public" />
     <aura:attribute name="rowsMapById" type="Map" access="public" />
     <aura:attribute name="rowIndexMapById" type="Map" access="public" />
-    <aura:attribute name="rowIdsToDelete" type="Id[]" access="public" />
-    <aura:attribute name="rowCreatedTempMaxNumber" type="Integer" default="0" access="public" />
+    <aura:attribute name="rowIdsToDelete" type="Id[]" access="private" />
+    <aura:attribute name="rowCreatedTempMaxNumber" type="Integer" default="0" access="private" />
     <aura:attribute name="timeFieldsToConvert" type="List" access="public" />
+
+    <aura:attribute name="tempRowsToUpdate" type="List" access="public" />
+    <aura:attribute name="tempRowsToDelete" type="List" access="public" />
     
     <aura:if isTrue="{!v.listOfSObjectFieldMetadata}" >
-        <lightning:card iconName="{!v.iconName}" >
+        <lightning:card title="{!v.relationshipFieldChildLabel}" iconName="{!v.iconName}" >
             <aura:set attribute="actions">
-                <lightning:button variant="brand" label="{!$Label.c.save}" onclick="{!c.saveRowsController}" />
+                <lightning:button variant="brand" label="Save" onclick="{!c.saveRowsController}" />
                 <lightning:buttonIcon iconName="utility:add" onclick="{!c.createRow}" />
-            </aura:set>
-            <aura:set attribute="title">
-                {!v.relationshipFieldChildLabel}
             </aura:set>
             <aura:if isTrue="{!v.reachedAsyncAtInit >= v.awaitedAsyncAtInit}" >
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered" >
@@ -48,7 +51,7 @@
                                 </th>
                             </aura:iteration>
                             <th scope="col">
-                                {!$Label.c.actions}
+                                Actions
                             </th>
                         </tr>
                     </thead>

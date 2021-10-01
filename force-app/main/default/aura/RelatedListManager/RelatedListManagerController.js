@@ -1,12 +1,12 @@
 ({
 	doInit: function(component, event, helper) {
-		let libAuraHelper = component.find('libAuraHelper');
+		let libAuraHandler = component.find('libAuraHandler');
         
         let listOfSObjectFieldNames = component.get('v.listOfSObjectFieldsString').replace(/\s/g,'').split(',');
         
         component.set('v.listOfSObjectFieldNames', listOfSObjectFieldNames);
         
-		libAuraHelper.callApexControllerFunction(
+		libAuraHandler.callApexControllerFunction(
             component, 
             'getFieldMetadataApex', 
             {
@@ -14,11 +14,9 @@
                 listOfFields: component.get('v.listOfSObjectFieldNames')
             }
         ).then(
-            helper.onSuccessGetFieldMetadata, 
-            libAuraHelper.onFailureDefault
+            helper.onSuccessGetFieldMetadata
         ).then(
-            helper.onSuccessGetRows, 
-            libAuraHelper.onFailureDefault
+            helper.onSuccessGetRows
         ).catch(
             function(error) {
                 console.error(error.message);
@@ -26,7 +24,6 @@
         );
 	}, 
     saveRowsController: function(component, event, helper) {
-        component.set('v.reachedAsyncAtInit', component.get('v.reachedAsyncAtInit') - 2);
         let childSObjectAPIName = component.get('v.childSObjectAPIName');
         let rowsMapById = component.get('v.rowsMapById');
         let rowIdsToDelete = component.get('v.rowIdsToDelete');
@@ -70,25 +67,25 @@
                 }
             });
         }
-        
-        let libAuraHelper = component.find('libAuraHelper');
-		libAuraHelper.callApexControllerFunction(
+
+        component.set('v.reachedAsyncAtInit', component.get('v.reachedAsyncAtInit') - 4);
+        component.set('v.tempRowsToUpdate', rowsToUpdate);
+        component.set('v.tempRowsToDelete', rowsToDelete);
+
+		component.find('libDatabaseDML').insertSObjects(
             component, 
-            'saveRowsApex', 
-            {
-                rowsToInsertJSON: JSON.stringify(rowsToInsert), 
-                rowsToUpdateJSON: JSON.stringify(rowsToUpdate), 
-                rowsToDeleteJSON: JSON.stringify(rowsToDelete)
-            }
+            rowsToInsert
         ).then(
-            helper.onSuccessSaveRows, 
-            libAuraHelper.onFailureDefault
+            helper.onSuccessInsertRows
         ).then(
-            helper.onSuccessGetRows, 
-            libAuraHelper.onFailureDefault
+            helper.onSuccessUpdateRows
+        ).then(
+            helper.onSuccessDeleteRows
+        ).then(
+            helper.onSuccessGetRows
         ).catch(
             function(error) {
-                console.error(error.message);
+                console.error('Line ' + error.lineNumber + ': ' + error.message);
             }
         );
     },

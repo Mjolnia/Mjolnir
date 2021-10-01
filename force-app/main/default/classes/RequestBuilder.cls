@@ -4,8 +4,8 @@
  * @author Davy LAURENT
  * @version 1.0
  */
-public class RequestBuilder {
-    public static String getSOQLQuery(
+global class RequestBuilder {
+    global static String getSOQLQuery(
         List<String> fieldNameList,
         String sObjectName,
         String usingScopeClause, 
@@ -35,8 +35,196 @@ public class RequestBuilder {
         System.debug('SOQL query: \n' + query);
         return query;
     }
+
+    global static String getSOQLQueryGroupBy(
+        List<String> fieldNameList,
+        String sObjectName,
+        String usingScopeClause, 
+        String whereClause,
+        String withClause,
+        String groupByClause,
+        String havingClause,
+        String orderByClause,
+        String limitClause,
+        String offsetClause
+    ) {
+        return getSOQLQuery(
+            fieldNameList,
+            sObjectName,
+            usingScopeClause, 
+            whereClause,
+            withClause,
+            groupByClause,
+            havingClause,
+            orderByClause,
+            limitClause,
+            offsetClause,
+            null,
+            null
+        );
+    }
+
+    global static String getSOQLQueryFor(
+        List<String> fieldNameList,
+        String sObjectName,
+        String usingScopeClause, 
+        String whereClause,
+        String withClause,
+        String orderByClause,
+        String limitClause,
+        String offsetClause,
+        String forClause
+    ) {
+        return getSOQLQuery(
+            fieldNameList,
+            sObjectName,
+            usingScopeClause, 
+            whereClause,
+            withClause,
+            null,
+            null,
+            orderByClause,
+            limitClause,
+            offsetClause,
+            forClause,
+            null
+        );
+    }
+
+    global static String getSOQLQuerySimple(
+        List<String> fieldNameList,
+        String sObjectName,
+        String whereClause,
+        String orderByClause,
+        String limitClause,
+        String offsetClause
+    ) {
+        return getSOQLQuery(
+            fieldNameList,
+            sObjectName,
+            null, 
+            whereClause,
+            null,
+            null,
+            null,
+            orderByClause,
+            limitClause,
+            offsetClause,
+            null,
+            null
+        );
+    }
+
+    global static String getSOQLInnerQuery(
+        List<String> fieldNameList,
+        String sObjectName,
+        String usingScopeClause, 
+        String whereClause,
+        String withClause,
+        String groupByClause,
+        String havingClause,
+        String orderByClause,
+        String limitClause,
+        String offsetClause,
+        String forClause,
+        String updateClause
+    ) {
+        return '(' + getSOQLQuery(
+            fieldNameList,
+            sObjectName,
+            usingScopeClause, 
+            whereClause,
+            withClause,
+            groupByClause,
+            havingClause,
+            orderByClause,
+            limitClause,
+            offsetClause,
+            forClause,
+            updateClause
+        ) + ')';
+    }
+
+    global static String getSOQLInnerQueryGroupBy(
+        List<String> fieldNameList,
+        String sObjectName,
+        String usingScopeClause, 
+        String whereClause,
+        String withClause,
+        String groupByClause,
+        String havingClause,
+        String orderByClause,
+        String limitClause,
+        String offsetClause
+    ) {
+        return '(' + getSOQLQuery(
+            fieldNameList,
+            sObjectName,
+            usingScopeClause, 
+            whereClause,
+            withClause,
+            groupByClause,
+            havingClause,
+            orderByClause,
+            limitClause,
+            offsetClause,
+            null,
+            null
+        ) + ')';
+    }
+
+    global static String getSOQLInnerQueryFor(
+        List<String> fieldNameList,
+        String sObjectName,
+        String usingScopeClause, 
+        String whereClause,
+        String withClause,
+        String orderByClause,
+        String limitClause,
+        String offsetClause,
+        String forClause
+    ) {
+        return '(' + getSOQLQuery(
+            fieldNameList,
+            sObjectName,
+            usingScopeClause, 
+            whereClause,
+            withClause,
+            null,
+            null,
+            orderByClause,
+            limitClause,
+            offsetClause,
+            forClause,
+            null
+        ) + ')';
+    }
+
+    global static String getSOQLInnerQuerySimple(
+        List<String> fieldNameList,
+        String sObjectName,
+        String whereClause,
+        String orderByClause,
+        String limitClause,
+        String offsetClause
+    ) {
+        return '(' + getSOQLQuery(
+            fieldNameList,
+            sObjectName,
+            null, 
+            whereClause,
+            null,
+            null,
+            null,
+            orderByClause,
+            limitClause,
+            offsetClause,
+            null,
+            null
+        ) + ')';
+    }
     
-    public static String getSOSLQuery(
+    global static String getSOSLQuery(
         String searchString, 
         String inClause, 
         String returningClause, 

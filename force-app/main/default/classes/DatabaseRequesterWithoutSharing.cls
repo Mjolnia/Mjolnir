@@ -5,10 +5,10 @@
  * @version 1.0
  */
 
-public without sharing class DatabaseRequesterWithoutSharing {
+global without sharing class DatabaseRequesterWithoutSharing {
     private class SObjectDoesNotExistException extends Exception {}
     
-    public static List<SObject> getSelectStarFromSObject(
+    global static List<SObject> getSelectStarFromSObject(
         String sObjectName,
         String usingScopeClause, 
         String whereClause,
@@ -43,7 +43,7 @@ public without sharing class DatabaseRequesterWithoutSharing {
         );
     }
     
-    public static List<SObject> getSelectFieldsFromSObject(
+    global static List<SObject> getSelectFieldsFromSObject(
         Set<String> fieldNameSet,
         String sObjectName,
         String usingScopeClause, 
@@ -82,7 +82,7 @@ public without sharing class DatabaseRequesterWithoutSharing {
         );
     }
     
-    public static List<SObject> getSelectFieldsFromSObjectGroupBy(
+    global static List<SObject> getSelectFieldsFromSObjectGroupBy(
         Set<String> fieldNameSet,
         String sObjectName,
         String usingScopeClause, 
@@ -119,7 +119,7 @@ public without sharing class DatabaseRequesterWithoutSharing {
         );
     }
     
-    public static List<SObject> getSelectFieldsFromSObjectFor(
+    global static List<SObject> getSelectFieldsFromSObjectFor(
         Set<String> fieldNameSet,
         String sObjectName,
         String usingScopeClause, 
@@ -155,7 +155,7 @@ public without sharing class DatabaseRequesterWithoutSharing {
         );
     }
     
-    public static List<List<SObject>> searchInSObjects(
+    global static List<List<SObject>> searchInSObjects(
         String searchString, 
         String inClause, 
         String returningClause, 
@@ -175,7 +175,7 @@ public without sharing class DatabaseRequesterWithoutSharing {
         );
     }
     
-    public static List<List<SObject>> searchInSObjects(
+    global static List<List<SObject>> searchInSObjects(
         String searchString, 
         String inClause, 
         String returningClause, 

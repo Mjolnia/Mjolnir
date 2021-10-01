@@ -1,9 +1,9 @@
 ({
 	getPicklistValuesAuraJS: function(component, event, helper) {
-        let libAuraHelper = component.find('libAuraHelper');
         let parameters = event.getParam('arguments');
-		return libAuraHelper.callApexControllerFunction(
-            component, 
+        return helper.callApexControllerFunctionHelper(
+            component,
+            parameters.callerComponent, 
             'getPicklistValuesAura', 
             {
                 'sObjectName': parameters.sObjectName, 
@@ -12,10 +12,10 @@
         );
 	}, 
 	getPicklistLabelByValueMapAuraJS: function(component, event, helper) {
-        let libAuraHelper = component.find('libAuraHelper');
         let parameters = event.getParam('arguments');
-		return libAuraHelper.callApexControllerFunction(
-            component, 
+        return helper.callApexControllerFunctionHelper(
+            component,
+            parameters.callerComponent, 
             'getPicklistLabelByValueMapAura', 
             {
                 'sObjectName': parameters.sObjectName, 
@@ -24,10 +24,10 @@
         );
 	}, 
 	getDependentPicklistValuesAuraJS: function(component, event, helper) {
-        let libAuraHelper = component.find('libAuraHelper');
         let parameters = event.getParam('arguments');
-		return libAuraHelper.callApexControllerFunction(
-            component, 
+        return helper.callApexControllerFunctionHelper(
+            component,
+            parameters.callerComponent, 
             'getDependentPicklistValuesAura', 
             {
                 'sObjectName': parameters.sObjectName, 
