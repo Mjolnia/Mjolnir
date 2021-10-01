@@ -103,8 +103,7 @@ global with sharing class RelatedListManagerController {
             
             return fieldMetadataList;
         } catch(Exception error) {
-            System.debug(LoggingLevel.ERROR, error.getStackTraceString());
-            System.debug(LoggingLevel.ERROR, error.getMessage());
+            System.debug(error.getStackTraceString());
             throw new AuraHandledException(error.getMessage());
         }
     }
@@ -123,8 +122,8 @@ global with sharing class RelatedListManagerController {
                 )
             );
         } catch(Exception error) {
-            System.debug(LoggingLevel.ERROR, error.getStackTraceString());
-            System.debug(LoggingLevel.ERROR, error.getMessage());
+            System.debug(error.getStackTraceString());
+            System.debug(error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }
@@ -142,12 +141,12 @@ global with sharing class RelatedListManagerController {
             
             return null;
         } catch(DmlException error) {
-            System.debug(LoggingLevel.ERROR, LoggingLevel.ERROR, error.getStackTraceString());
-            System.debug(LoggingLevel.ERROR, error.getDmlMessage(0));
+            System.debug(error.getStackTraceString());
+            System.debug(error.getDmlMessage(0));
             return error.getDmlMessage(0);
         } catch(Exception error) {
-            System.debug(LoggingLevel.ERROR, error.getStackTraceString());
-            System.debug(LoggingLevel.ERROR, error.getMessage());
+            System.debug(error.getStackTraceString());
+            System.debug(error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }

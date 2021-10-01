@@ -1,0 +1,42 @@
+<template >
+    <lightning-card title={relationshipFieldChildLabel} icon-name={iconName} >
+        <div slot="actions">
+            <lightning-button variant="brand" label={label.save} onclick={saveRows} class="slds-m-right_xx-small" ></lightning-button>
+            <lightning-button-icon icon-name="utility:add" onclick={createRow} ></lightning-button-icon>
+        </div>
+        <table if:true={reachedAsyncAtInitTestResult} class="slds-table slds-table_cell-buffer slds-table_bordered" >
+            <thead>
+                <tr class="slds-line-height_reset" >
+                    <template for:each={listOfSObjectFieldMetadata} for:item="fieldMetadata" >
+                        <th key={fieldMetadata.name} scope="col" >
+                            {fieldMetadata.label}
+                        </th>
+                    </template>
+                    <th scope="col" >
+                        {label.actions}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={rows} for:item="row">
+                    <tr key={row.Id} >
+                        <template for:each={listOfSObjectFieldMetadata} for:item="fieldMetadata" >
+                            <td key={fieldMetadata.name} data-label={fieldMetadata.label} >
+                                <c-lightning-input-configuration-l-w-c 
+                                    field-metadata={fieldMetadata} 
+                                    s-object={row} 
+                                    onrlmlwcvaluehaschanged={handleRLMLWCValueHasChanged} 
+                                ></c-lightning-input-configuration-l-w-c>
+                            </td>
+                        </template>
+                        <td class="actionSection">
+                            <lightning-button-icon icon-name="utility:copy" class="slds-m-right_xx-small" value={row.Id} onclick={cloneRow} ></lightning-button-icon>
+                            <lightning-button-icon icon-name="utility:delete" value={row.Id} onclick={deleteRow} ></lightning-button-icon>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+        <lightning-spinner if:false={reachedAsyncAtInitTestResult} alternative-text="Loading" size="medium" ></lightning-spinner>
+    </lightning-card>
+</template>

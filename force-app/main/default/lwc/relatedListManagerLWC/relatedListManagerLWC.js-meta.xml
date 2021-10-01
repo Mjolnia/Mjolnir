@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>
+            lightning__RecordPage
+        </target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="childSObjectAPIName" required="true" type="String" label="API Name of the child object"/>
+            <property name="relationshipFieldName" required="true" type="String" label="API Name of the relationship field on the child object"/>
+            <property name="relationshipFieldChildLabel" required="true" type="String" label="Name of the elements shown"/>
+            <property name="listOfSObjectFieldsString" required="true" type="String" label="List of fields to show in table separated by comma"/>
+            <property name="picklistNoneLabel" required="true" type="String" label="Label for the 'None' element"/>
+            <property name="iconName" required="true" type="String" label="Name of the icon" description="Name of the icon formatted like category:iconname from SLDS (Search SLDS Icon on Google)"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
