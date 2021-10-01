@@ -1,5 +1,5 @@
-public with sharing class RelatedListManagerController {
-    public class FieldMetadata {
+global with sharing class RelatedListManagerController {
+    class FieldMetadata {
         @auraEnabled public String name;
         @auraEnabled public String label;
         @auraEnabled public String childRelationshipLabel;
@@ -34,7 +34,7 @@ public with sharing class RelatedListManagerController {
     }
     
     @auraEnabled(cacheable=true)
-    public static List<Object> getFieldMetadataApex(String sObjectName, List<String> listOfFields, String emptyPicklistLabel) {
+    global static List<Object> getFieldMetadataApex(String sObjectName, List<String> listOfFields, String emptyPicklistLabel) {
         try {
             List<FieldMetadata> fieldMetadataList = new List<FieldMetadata>();
 
@@ -103,7 +103,8 @@ public with sharing class RelatedListManagerController {
             
             return fieldMetadataList;
         } catch(Exception error) {
-            System.debug(error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }
@@ -122,14 +123,14 @@ public with sharing class RelatedListManagerController {
                 )
             );
         } catch(Exception error) {
-            System.debug(error.getStackTraceString());
-            System.debug(error.getMessage());
+            System.debug(LoggingLevel.ERROR, error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }
     
     @auraEnabled
-    public static String saveRowsApex(String rowsToInsertJSON, String rowsToUpdateJSON, String rowsToDeleteJSON) {
+    global static String saveRowsApex(String rowsToInsertJSON, String rowsToUpdateJSON, String rowsToDeleteJSON) {
         try {
             List<sObject> rowsToInsert = (List<sObject>) JSON.deserialize(rowsToInsertJSON, List<sObject>.class);
             List<sObject> rowsToUpdate = (List<sObject>) JSON.deserialize(rowsToUpdateJSON, List<sObject>.class);
@@ -141,12 +142,12 @@ public with sharing class RelatedListManagerController {
             
             return null;
         } catch(DmlException error) {
-            System.debug(error.getStackTraceString());
-            System.debug(error.getDmlMessage(0));
+            System.debug(LoggingLevel.ERROR, LoggingLevel.ERROR, error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getDmlMessage(0));
             return error.getDmlMessage(0);
         } catch(Exception error) {
-            System.debug(error.getStackTraceString());
-            System.debug(error.getMessage());
+            System.debug(LoggingLevel.ERROR, error.getStackTraceString());
+            System.debug(LoggingLevel.ERROR, error.getMessage());
             throw new AuraHandledException(error.getMessage());
         }
     }
