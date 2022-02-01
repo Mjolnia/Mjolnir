@@ -5,7 +5,6 @@ private class ImportSObjectWithJSONTest {
         Map<String,String> accountFieldToJSONField = new Map<String,String>{
             'Name' => 'accountName', 
             'AnnualRevenue' => 'accountAnnualRevenue', 
-            'PersonDoNotCall' => 'accountPersonDoNotCall', 
             'ParentId' => 'accountParentId'
         };
 
@@ -30,7 +29,6 @@ private class ImportSObjectWithJSONTest {
         Map<String,Object> accountDataAsJSON = new Map<String,Object>{
             'accountName' => 'Account test name', 
             'accountAnnualRevenue' => '5.7', 
-            'accountPersonDoNotCall' => 'true', 
             'accountParentId' => 'PARENTTESTACCOUNT'
         }; 
 
@@ -82,7 +80,6 @@ private class ImportSObjectWithJSONTest {
 
         System.assertEquals('Account test name', account.Name);
         System.assertEquals(5.7, account.AnnualRevenue);
-        System.assertEquals(true, account.PersonDoNotCall);
         System.assertEquals(parentAccount.Id, account.ParentId);
         
         System.assertEquals('TESTING', contact.LastName);
@@ -97,7 +94,6 @@ private class ImportSObjectWithJSONTest {
         Map<String,String> accountFieldToJSONField = new Map<String,String>{
             'Name' => 'accountName', 
             'AnnualRevenue' => 'accountAnnualRevenue', 
-            'PersonDoNotCall' => 'accountPersonDoNotCall', 
             'ParentId' => 'accountParentId'
         };
 
@@ -124,7 +120,6 @@ private class ImportSObjectWithJSONTest {
         Account account = new Account(
             Name = 'Account test name',
             AnnualRevenue = 5.7, 
-            PersonDoNotCall = true, 
             ParentId = parent.Id
         );
         account.Parent = parent;
@@ -167,7 +162,7 @@ private class ImportSObjectWithJSONTest {
         eventGenerator.writeEndObject();
 
         System.assertEquals(
-            '{"accountName":"Account test name","accountAnnualRevenue":5.7,"accountPersonDoNotCall":true,"accountParentId":"PARENTTESTACCOUNT"}', 
+            '{"accountName":"Account test name","accountAnnualRevenue":5.7,"accountParentId":"PARENTTESTACCOUNT"}', 
             accountGenerator.getAsString()
         );
         
@@ -187,7 +182,6 @@ private class ImportSObjectWithJSONTest {
         Map<String,String> accountFieldToJSONField = new Map<String,String>{
             'Name' => 'accountName', 
             'AnnualRevenue' => 'accountAnnualRevenue', 
-            'PersonDoNotCall' => 'accountPersonDoNotCall', 
             'ParentId' => 'accountParentId'
         };
 

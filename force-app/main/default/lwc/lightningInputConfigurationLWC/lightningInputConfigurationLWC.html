@@ -4,7 +4,7 @@
         type="checkbox" 
         checked={value} 
         variant="label-hidden" 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -13,7 +13,7 @@
         value={value} 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -22,7 +22,7 @@
         value={value} 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -31,7 +31,7 @@
         value={value} 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -40,7 +40,7 @@
         value={value} 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -50,7 +50,7 @@
         step="1" 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -60,7 +60,7 @@
         step={fieldMetadata.increment} 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -71,7 +71,7 @@
         formatter="currency" 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -82,7 +82,7 @@
         formatter="percent-fixed" 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -91,7 +91,7 @@
         value={value} 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -100,7 +100,7 @@
         value={value} 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-input 
@@ -109,7 +109,7 @@
         value={value} 
         variant="label-hidden" 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-input>
     <lightning-combobox 
@@ -118,7 +118,7 @@
         variant="label-hidden" 
         options={fieldMetadata.options} 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-combobox>
     <lightning-combobox 
@@ -127,9 +127,92 @@
         variant="label-hidden" 
         options={fieldMetadata.options} 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
-    ></lightning-combobox><!--
+    ></lightning-combobox>
+    <div if:true={isReference} class="slds-combobox_container">
+        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
+            <div 
+                class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" 
+                role="none"
+            >
+                <button 
+                    type="button" 
+                    class="slds-input_faux slds-combobox__input" 
+                    aria-labelledby="combobox-label-id-131 combobox-id-1-selected-value" 
+                    id="combobox-id-1-selected-value" 
+                    aria-controls="listbox-id-1" 
+                    aria-expanded="false" 
+                    aria-haspopup="listbox"
+                >
+                    <span class="slds-truncate" id="combobox-value-id-98">Select an Option…</span>
+                </button>
+                <span class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_right">
+                    <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                        <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#down"></use>
+                    </svg>
+                </span>
+            </div>
+            <div 
+                class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" 
+                role="none"
+            >
+                <input
+                    type="text" 
+                    if:true={isReference} 
+                    value={value} 
+                    class="slds-input slds-combobox__input" 
+                    aria-autocomplete="list" 
+                    aria-controls={fieldMetadata.name} 
+                    role="textbox" 
+                    required={fieldMetadata.isRequired} 
+                    onchange={onChangeData} 
+                ></input>
+                <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right" >
+                    <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true" >
+                        <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search" ></use>
+                    </svg>
+                </span>
+            </div>
+            <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
+                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                    <li role="presentation" class="slds-listbox__item">
+                        <div id="option1" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                            <span class="slds-media__figure slds-listbox__option-icon"></span>
+                            <span class="slds-media__body">
+                                <span class="slds-truncate" title="Accounts">Accounts</span>
+                            </span>
+                        </div>
+                    </li>
+                    <li role="presentation" class="slds-listbox__item">
+                        <div id="option2" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                            <span class="slds-media__figure slds-listbox__option-icon"></span>
+                            <span class="slds-media__body">
+                                <span class="slds-truncate" title="Reports">Reports</span>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div id={fieldMetadata.name} class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox" >
+                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                    <template for:each={fieldMetadata.options} for:item="option" >
+                        <li key={option.value} role="presentation" class="slds-listbox__item">
+                            <div 
+                                id={option.value}
+                                class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" 
+                                role="option" 
+                            >
+                                <span class="slds-media__body">
+                                    <span class="slds-truncate" title={option.label} >{option.label}</span>
+                                </span>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </div>
+    </div>
     <div if:true={isReference} class="slds-combobox_container" >
         <div 
             class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" 
@@ -173,14 +256,14 @@
                 </ul>
             </div>
         </div>
-    </div>-->
+    </div>
     <lightning-combobox 
         if:true={isReference} 
         value={value} 
         variant="label-hidden" 
         options={fieldMetadata.options} 
         required={fieldMetadata.isRequired} 
-        read-only={fieldMetadata.isEditable}
+        read-only={fieldMetadata.isReadOnly}
         onchange={onChangeData} 
     ></lightning-combobox>
 </template>

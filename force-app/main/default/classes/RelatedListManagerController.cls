@@ -5,7 +5,7 @@ global with sharing class RelatedListManagerController {
         @auraEnabled public String childRelationshipLabel;
         @auraEnabled public String dataType;
         @auraEnabled public Boolean isRequired;
-        @auraEnabled public Boolean isEditable;
+        @auraEnabled public Boolean isReadOnly;
         @auraEnabled public String increment;
         @auraEnabled public List<Map<String,String>> options;
         
@@ -15,7 +15,7 @@ global with sharing class RelatedListManagerController {
             String childRelationshipLabel, 
             String dataType, 
             Boolean isRequired, 
-            Boolean isEditable, 
+            Boolean isReadOnly, 
             Integer scale, 
             List<Map<String,String>> options
         ) {
@@ -24,7 +24,7 @@ global with sharing class RelatedListManagerController {
             this.childRelationshipLabel = childRelationshipLabel;
             this.dataType = dataType;
             this.isRequired = isRequired;
-            this.isEditable = isEditable;
+            this.isReadOnly = isReadOnly;
             if(scale != null) {
                 this.increment = '0.' + ''.leftPad(scale - 1, '0') + '1';
             }
@@ -55,7 +55,7 @@ global with sharing class RelatedListManagerController {
                         if(dataType == Schema.DisplayType.Picklist || dataType == Schema.DisplayType.MultiPicklist) {
                             options = new List<Map<String,String>>();
                             if(!isRequired) {
-                                options.add(new Map<String,String>{'' => emptyPicklistLabel});
+                                options.add(new Map<String,String>{'value' => '', 'label' => emptyPicklistLabel});
                             }
                             for(Schema.PicklistEntry row: describeSObjectField.getPickListValues()) {
                                 if(row.isActive()) {
@@ -92,7 +92,7 @@ global with sharing class RelatedListManagerController {
                                 (dataType == Schema.DisplayType.Reference) ? describeSObjectField.getRelationshipName() : null, 
                                 dataType.name(), 
                                 isRequired, 
-                                describeSObjectField.isCreateable() && describeSObjectField.isUpdateable(),
+                                !describeSObjectField.isCreateable() || !describeSObjectField.isUpdateable(),
                                 describeSObjectField.getScale(), 
                                 options
                             )

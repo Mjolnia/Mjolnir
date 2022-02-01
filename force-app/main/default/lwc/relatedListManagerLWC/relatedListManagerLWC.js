@@ -41,9 +41,6 @@ export default class RelatedListManagerLWC extends LightningElement {
 
     @api connectedCallback() {
         this.listOfSObjectFieldNames = this.listOfSObjectFieldsString.replace(/\s/g,'').split(',');
-        window.console.log(this.childSObjectAPIName);
-        window.console.log(this.listOfSObjectFieldNames);
-        window.console.log(this.picklistNoneLabel);
         
         getFieldMetadata(
             {
@@ -167,7 +164,6 @@ export default class RelatedListManagerLWC extends LightningElement {
     }
     
     onSuccessGetFieldMetadata(result) {
-        window.console.log('START getFieldMetadata on success');
         this.reachedAsyncAtInit += 1;
         this.listOfSObjectFieldMetadata = result;
 
@@ -193,8 +189,6 @@ export default class RelatedListManagerLWC extends LightningElement {
         this.listOfSObjectFieldNamesToQuery = this.listOfSObjectFieldNames.slice(0);
         this.listOfSObjectFieldNamesToQuery.push(this.relationshipFieldName);
 
-        window.console.log('END getFieldMetadata on success');
-
         return getData(
             {
                 fieldAPINames: this.listOfSObjectFieldNamesToQuery, 
@@ -204,11 +198,7 @@ export default class RelatedListManagerLWC extends LightningElement {
         );
     }
 	onSuccessSaveRows() {
-        window.console.log('START saveRows on success');
-
         this.reachedAsyncAtInit += 1;
-
-        window.console.log('END saveRows on success');
         
         return getData(
             {
@@ -219,8 +209,6 @@ export default class RelatedListManagerLWC extends LightningElement {
         );
     }
     onSuccessGetRows(result) {
-        window.console.log('START getRows on success');
-
         this.reachedAsyncAtInit += 1;
         this.rows = result;
         this.rowsMapById = {};
@@ -275,8 +263,6 @@ export default class RelatedListManagerLWC extends LightningElement {
                 }
             }
         }
-
-        window.console.log('END getRows on success');
     }
     
     handleRLMLWCValueHasChanged(event) {
